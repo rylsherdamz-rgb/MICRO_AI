@@ -1,26 +1,190 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================================
+   MICRO — Crypto Hacker Design System
+   Dark background, neon green/cyan accents, monospace typography,
+   terminal-inspired with glow effects and scanline overlays.
+   ============================================================ */
 
+/* --- Design Tokens (Tailwind v4 @theme) --- */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Background palette */
+  --color-bg-primary: #0a0a0f;
+  --color-bg-secondary: #111118;
+  --color-bg-tertiary: #1a1a24;
+  --color-bg-elevated: #222233;
+
+  /* Accent palette */
+  --color-neon: #00ff88;
+  --color-neon-dim: #00cc6a;
+  --color-cyan: #00d4ff;
+  --color-cyan-dim: #00a8cc;
+  --color-amber: #ffb800;
+  --color-danger: #ff4455;
+
+  /* Text palette */
+  --color-text-primary: #e8e8ed;
+  --color-text-secondary: #8888a0;
+  --color-text-muted: #555568;
+
+  /* Border */
+  --color-border-primary: #222233;
+  --color-border-glow: #00ff8855;
+
+  /* Fonts — set via CSS custom properties below, map here for Tailwind */
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* --- Base Layer --- */
+:root {
+  --background: var(--color-bg-primary);
+  --foreground: var(--color-text-primary);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Scrollbar (crypto-dark) --- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-elevated);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neon-dim);
+}
+
+/* --- Selection --- */
+::selection {
+  background: var(--color-neon);
+  color: var(--color-bg-primary);
+}
+
+/* --- Utility: Glow borders --- */
+.glow-border {
+  box-shadow:
+    0 0 8px rgba(0, 255, 136, 0.15),
+    inset 0 0 8px rgba(0, 255, 136, 0.05);
+}
+.glow-border-cyan {
+  box-shadow:
+    0 0 8px rgba(0, 212, 255, 0.15),
+    inset 0 0 8px rgba(0, 212, 255, 0.05);
+}
+.glow-border:hover {
+  box-shadow:
+    0 0 16px rgba(0, 255, 136, 0.3),
+    inset 0 0 12px rgba(0, 255, 136, 0.1);
+}
+
+/* --- Utility: Neon text glow --- */
+.neon-text {
+  text-shadow:
+    0 0 7px rgba(0, 255, 136, 0.6),
+    0 0 20px rgba(0, 255, 136, 0.3);
+}
+.neon-text-cyan {
+  text-shadow:
+    0 0 7px rgba(0, 212, 255, 0.6),
+    0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+/* --- Utility: Terminal scanlines overlay --- */
+.scanlines {
+  position: relative;
+}
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* --- Utility: Glitch-style text shadow (for hero headlines) --- */
+.glitch-text {
+  text-shadow:
+    2px 2px 0 rgba(0, 212, 255, 0.4),
+    -2px -2px 0 rgba(0, 255, 136, 0.4);
+}
+
+/* --- Animations (NOT for Remotion — page-level only) --- */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-secondary) 25%,
+    var(--color-bg-elevated) 50%,
+    var(--color-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* --- Focus ring (neon, accessible) --- */
+:focus-visible {
+  outline: 2px solid var(--color-neon);
+  outline-offset: 2px;
+}
+
+/* --- Links --- */
+a {
+  color: var(--color-cyan);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+a:hover {
+  color: var(--color-neon);
 }
