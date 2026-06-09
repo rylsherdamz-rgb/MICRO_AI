@@ -4,6 +4,7 @@ import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { RouteProgress } from "@/components/shared/RouteProgress";
+import { WalletProvider } from "@/lib/wallet-context";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -58,12 +59,14 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-bg-primary text-text-primary font-sans antialiased">
-        <Suspense fallback={null}>
-          <RouteProgress />
-        </Suspense>
-        <Navbar />
-        <main className="flex-1 pt-16">{children}</main>
-        <Footer />
+        <WalletProvider>
+          <Suspense fallback={null}>
+            <RouteProgress />
+          </Suspense>
+          <Navbar />
+          <main className="flex-1 pt-16">{children}</main>
+          <Footer />
+        </WalletProvider>
       </body>
     </html>
   );

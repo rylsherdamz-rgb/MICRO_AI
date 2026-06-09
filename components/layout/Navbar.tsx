@@ -2,9 +2,21 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useWallet } from "@/lib/wallet-context";
 
 export function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const {
+    address,
+    isConnected,
+    isLoading,
+    error: _walletError,
+    connect,
+    disconnect,
+  } = useWallet();
+
+  const formatAddress = (addr: string) =>
+    `${addr.slice(0, 4)}...${addr.slice(-4)}`;
 
   return (
     <header
@@ -84,15 +96,41 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Connect button */}
-        <button
-          type="button"
-          className="flex-shrink-0 rounded-lg border border-neon/30 bg-neon/5 px-4 py-2 text-sm font-medium text-neon hover:bg-neon/10 hover:border-neon/60 transition-all focus:outline-none focus:ring-2 focus:ring-neon/40 glow-border"
-          aria-label="Connect Stellar wallet"
-        >
-          <span className="hidden sm:inline">Connect Wallet</span>
-          <span className="sm:hidden">Connect</span>
-        </button>
+        {/* Connect Wallet button */}
+        {isConnected && address ? (
+          <div className="flex-shrink-0 flex items-center gap-2 rounded-lg border border-neon/20 bg-bg-secondary px-3 py-1.5">
+            <span
+              className="flex-shrink-0 h-2 w-2 rounded-full bg-neon"
+              aria-hidden="true"
+            />
+            <span className="text-sm font-mono text-neon/80">
+              {formatAddress(address)}
+            </span>
+            <button
+              type="button"
+              onClick={disconnect}
+              className="ml-1 text-xs text-text-muted hover:text-danger transition-colors"
+              aria-label="Disconnect wallet"
+            >
+              Disconnect
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={connect}
+            disabled={isLoading}
+            className="flex-shrink-0 rounded-lg border border-neon/30 bg-neon/5 px-4 py-2 text-sm font-medium text-neon hover:bg-neon/10 hover:border-neon/60 transition-all focus:outline-none focus:ring-2 focus:ring-neon/40 glow-border disabled:opacity-50 disabled:cursor-wait"
+            aria-label="Connect Stellar wallet"
+          >
+            <span className="hidden sm:inline">
+              {isLoading ? "Connecting..." : "Connect Wallet"}
+            </span>
+            <span className="sm:hidden">
+              {isLoading ? "..." : "Connect"}
+            </span>
+          </button>
+        )}
 
         {/* Mobile menu toggle */}
         <button

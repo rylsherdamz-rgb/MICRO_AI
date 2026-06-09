@@ -1,4 +1,3 @@
-Initialising login role...
 export type Json =
   | string
   | number
@@ -720,6 +719,38 @@ export type Database = {
         }
         Relationships: []
       }
+      wallets: {
+        Row: {
+          connected_at: string
+          id: string
+          last_seen_at: string
+          profile_id: string | null
+          stellar_address: string
+        }
+        Insert: {
+          connected_at?: string
+          id?: string
+          last_seen_at?: string
+          profile_id?: string | null
+          stellar_address: string
+        }
+        Update: {
+          connected_at?: string
+          id?: string
+          last_seen_at?: string
+          profile_id?: string | null
+          stellar_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallets_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -869,6 +900,3 @@ export const Constants = {
     Enums: {},
   },
 } as const
-<claude-code-hint v="1" type="plugin" value="supabase@claude-plugins-official" />
-A new version of Supabase CLI is available: v2.105.0 (currently installed v2.98.2)
-We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
